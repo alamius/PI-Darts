@@ -15,31 +15,21 @@ Array.prototype.get_average = function(){
     return sum/this.length;
 }
 
-// String.prototype.contains = function(obj) {
-//     var i = this.length;
-//     while (i--) {
-//         if (this[i] === obj) {
-//             return true;
-//         }
-//     }
-//     return false;
-// }
-
 function info() { //div-id, p-element-id, text consisting of a desciprion and a number
     add_text_node("div0", "total",  "total dots: "              + str(dots_total));
     add_text_node("div0", "circl",  "dots in the circle: "      + str(dots_circl));
     add_text_node("div0", "sqare",  "dots outside the circle: " + str(dots_total - dots_circl));
     add_text_node("div0", "pi",     "circle / total * 4: "      + str(pi_approx));
+    add_text_node("div0", "graph",  "graph (press [G]): "       + (graph_show ? 'drawing' : 'not drawing'));
+    add_text_node("div0", "avg",    "graph: averages (press [A]): " + (graph_averages ? 'true' : 'false'));
     return 0;
 }
 
 function add_text_node(div_id, p_id, text) {
     text = document.createTextNode(text);
-    // console.log(text);
     p = document.getElementById(p_id);
     clear_HTML_Node(p);
     p.appendChild(text);
-    // console.log(p);
     document.getElementById(div_id).appendChild(p);
 }
 

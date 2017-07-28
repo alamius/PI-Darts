@@ -1,20 +1,21 @@
 var dots_per_sec = 50;
 var bg_reset = false; // dots don't stay on screen
-var P = []; // used, if dots get saved
-var F = []; // used, if fractions get saved
+var F = []; // used, if fractions get saved for the graph
 var dots_total = 0;
 var dots_circl = 0;
-var wdth = 500; // width of the canvas in px
+var wdth = 500; // width of the canvas parts in px
 var hght = 500;
 var max_y = 5; //for stretching in the graph
 var point_size = 10;
 var paint_circle = true;
 var paint_pi_line = true;
+var graph_show = false;
+var graph_averages = false;
 
 // executed once at the beginning
 function setup() {
     createCanvas(wdth * 2 + 50, hght);
-    // frameRate(dots_per_sec);
+    frameRate(dots_per_sec);
     strokeWeight(3); //default: 1
 }
 
@@ -30,15 +31,25 @@ function draw() {
     }
     dot_new = make_dot();
     dots_total += 1;
-    // P.push(dot_new); // the dots do not need to be saved for later
     if(dot_new.mag() < 1){ // magnitude(dot_new) < 1 => inside the circle
         dots_circl += 1;
     }
     show_dot(dot_new);
-    pi_approx = round(dots_circl / dots_total * 4 * pow(10, 6))/pow(10, 6); // round(x * 1000) / 1000 = round(x, 3 digits)
+    pi_approx = round((dots_circl / dots_total * 4) * pow(10, 6))/pow(10, 6); // round(x * 1000) / 1000 = round(x, 3 digits)
     F.push(pi_approx);
-    show_graph();
+    if(graph_show){
+        show_graph();
+    }
     info();
+}
+
+function keyPressed(){
+    if(keyCode == 71){ // 'G'
+        graph_show = !graph_show;
+    }else if(keyCode == 65){ // 'A'
+        graph_averages = !graph_averages;
+        graph_show = true;
+    }
 }
 
 function make_dot(){
@@ -78,11 +89,14 @@ function show_graph(){
         line(x1, y1, x2, y1);
     }
     for(i = 0; i < F.length; i++){
-        avg = F.portion(0, i).get_average();
-        y = max_y - avg;
+        if(graph_averages){
+            avg = F.portion(0, i).get_average();
+            y = max_y - avg;
+        }else{
+            y = max_y - F[i];
+        }
         y = map(y, 0, max_y, 0, hght);
         x = map(i, 0, F.length, wdth +50 , wdth * 2);
-        // noStroke();
         fill(255);
         ellipse(x, y, 5);
     }
